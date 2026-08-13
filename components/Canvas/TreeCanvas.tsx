@@ -1,11 +1,11 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useId, useRef } from "react";
 import { useGesture } from "@use-gesture/react";
-import { AnimatePresence } from "framer-motion";
+import { AnimatePresence, animate, motion, useMotionValue } from "framer-motion";
 import { Plus, Minus, Maximize2 } from "lucide-react";
 import { ActivityStep } from "@/types/tree";
-import { getBounds } from "@/lib/layout";
+import { getBounds, H_SPACING, V_SPACING } from "@/lib/layout";
 import NodeView from "./NodeView";
 import EdgeView from "./EdgeView";
 
@@ -13,18 +13,15 @@ interface TreeCanvasProps {
   step: ActivityStep | null;
 }
 
-interface Transform {
-  x: number;
-  y: number;
-  k: number;
-}
-
 const MIN_K = 0.25;
 const MAX_K = 1.6;
 
 export default function TreeCanvas({ step }: TreeCanvasProps) {
   const containerRef = useRef<HTMLDivElement>(null);
-  const [transform, setTransform] = useState<Transform>({ x: 0, y: 0, k: 1 });
+  const gridPatternId = useId();
+  const x = useMotionValue(0);
+  const y = useMotionValue(0);
+  const k = useMotionValue(1);
   const lastOpId = useRef<string | null>(null);
   const stepRef = useRef(step);
 
@@ -47,12 +44,13 @@ export default function TreeCanvas({ step }: TreeCanvasProps) {
     const clampedK = Math.max(MIN_K, Math.min(k, MAX_K));
     const cx = (bounds.minX + bounds.maxX) / 2;
     const cy = (bounds.minY + bounds.maxY) / 2;
-    setTransform({
-      x: width / 2 - cx * clampedK,
-      y: height / 2 - cy * clampedK,
-      k: clampedK,
-    });
-  }, []);
+    const nextX = width / 2 - cx * clampedK;
+    const nextY = height / 2 - cy * clampedK;
+
+    animate(x, nextX, { type: "spring", stiffness: 240, damping: 30 });
+    animate(y, nextY, { type: "spring", stiffness: 240, damping: 30 });
+    animate(k, clampedK, { type: "spring", stiffness: 240, damping: 30 });
+  }, [x, y]);
 
   // Auto re-fit whenever a new operation starts (keeps pan/zoom stable mid-operation).
   useEffect(() => {
@@ -76,14 +74,16 @@ export default function TreeCanvas({ step }: TreeCanvasProps) {
   useGesture(
     {
       onDrag: ({ delta: [dx, dy] }) => {
-        setTransform((t) => ({ ...t, x: t.x + dx, y: t.y + dy }));
+        x.stop();
+        y.stop();
+        x.set(x.get() + dx);
+        y.set(y.get() + dy);
       },
       onWheel: ({ delta: [, dy], event }) => {
         event.preventDefault();
-        setTransform((t) => {
-          const nextK = Math.max(MIN_K, Math.min(MAX_K, t.k * (1 - dy * 0.001)));
-          return { ...t, k: nextK };
-        });
+        k.stop();
+        const nextK = Math.max(MIN_K, Math.min(MAX_K, k.get() * (1 - dy * 0.001)));
+        k.set(nextK);
       },
     },
     {
@@ -94,14 +94,28 @@ export default function TreeCanvas({ step }: TreeCanvasProps) {
   );
 
   const zoomBy = (factor: number) => {
-    setTransform((t) => ({ ...t, k: Math.max(MIN_K, Math.min(MAX_K, t.k * factor)) }));
+    k.stop();
+    k.set(Math.max(MIN_K, Math.min(MAX_K, k.get() * factor)));
   };
 
   return (
-    <div className="relative flex-1 min-h-0 overflow-hidden dot-grid bg-canvas">
+    <div className="relative flex-1 min-h-0 overflow-hidden bg-canvas">
       <div ref={containerRef} className="absolute inset-0 cursor-grab touch-none active:cursor-grabbing">
         <svg width="100%" height="100%">
-          <g transform={`translate(${transform.x}, ${transform.y}) scale(${transform.k})`}>
+          <motion.g style={{ x, y, scale: k, transformOrigin: "center" }}>
+            <defs>
+              <pattern id={gridPatternId} width={H_SPACING / 2} height={V_SPACING / 2} patternUnits="userSpaceOnUse">
+                <path
+                  d={`M ${H_SPACING / 2} 0 L 0 0 0 ${V_SPACING / 2}`}
+                  fill="none"
+                  stroke="var(--color-hairline)"
+                  strokeOpacity="0.45"
+                  strokeWidth="1"
+                  vectorEffect="non-scaling-stroke"
+                />
+              </pattern>
+            </defs>
+            <rect x={-5000} y={-5000} width={10000} height={10000} fill={`url(#${gridPatternId})`} opacity="0.85" />
             <AnimatePresence>
               {step?.edges.map((edge) => (
                 <EdgeView key={edge.id} edge={edge} />
@@ -112,7 +126,7 @@ export default function TreeCanvas({ step }: TreeCanvasProps) {
                 <NodeView key={node.id} node={node} isActive={step.activeNodeIds.includes(node.id)} />
               ))}
             </AnimatePresence>
-          </g>
+          </motion.g>
         </svg>
       </div>
 

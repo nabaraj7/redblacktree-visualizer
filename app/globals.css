@@ -49,10 +49,8 @@ body {
   background: transparent;
 }
 
-.dot-grid {
-  background-image: radial-gradient(circle, #26303d 1.3px, transparent 1.3px);
-  background-size: 24px 24px;
-  background-color: var(--color-canvas);
+.active-pulse {
+  animation: pulse-ring 1.4s ease-out infinite;
 }
 
 @keyframes pulse-ring {
@@ -65,10 +63,6 @@ body {
   100% {
     box-shadow: 0 0 0 0 rgba(245, 158, 11, 0);
   }
-}
-
-.active-pulse {
-  animation: pulse-ring 1.4s ease-out infinite;
 }
 
 @media (prefers-reduced-motion: reduce) {
