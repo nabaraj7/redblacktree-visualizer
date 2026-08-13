@@ -1,26 +1,78 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: -apple-system, "Segoe UI", Inter, Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-mono: "JetBrains Mono", "Fira Code", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+
+  /* professional dark / graphite palette */
+  --color-canvas: #0b0e13;
+  --color-panel: #11151c;
+  --color-panel-raised: #182029;
+  --color-hairline: #262f3b;
+  --color-ink: #e7ecf3;
+  --color-ink-muted: #8891a1;
+  --color-ink-faint: #4e5866;
+
+  --color-node-red: #ef4444;
+  --color-node-red-ring: #fca5a5;
+  --color-node-black: #1b2432;
+  --color-node-black-ring: #5b6b82;
+
+  --color-amber: #f59e0b;
+  --color-cyan: #22d3ee;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html,
+body {
+  height: 100%;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans);
+  background: var(--color-canvas);
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-hairline) transparent;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-hairline);
+  border-radius: 999px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.dot-grid {
+  background-image: radial-gradient(circle, #26303d 1.3px, transparent 1.3px);
+  background-size: 24px 24px;
+  background-color: var(--color-canvas);
+}
+
+@keyframes pulse-ring {
+  0% {
+    box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.5);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(245, 158, 11, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(245, 158, 11, 0);
+  }
+}
+
+.active-pulse {
+  animation: pulse-ring 1.4s ease-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .active-pulse {
+    animation: none;
+  }
 }
