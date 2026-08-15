@@ -25,7 +25,7 @@ export interface TreeEdge {
   toId: string;
 }
 
-export type StepType = "COMPARISON" | "RECOLOR" | "ROTATION" | "BALANCED";
+export type StepType = "COMPARISON" | "RECOLOR" | "ROTATION" | "DELETION" | "BALANCED";
 
 export interface ActivityStep {
   id: string;
