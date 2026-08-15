@@ -12,7 +12,7 @@ interface InputPanelProps {
 
 function parseValues(raw: string): number[] | null {
   const parts = raw
-    .split(",")
+    .split(/[, ]+/)
     .map((s) => s.trim())
     .filter((s) => s.length > 0);
   if (parts.length === 0) return null;
@@ -51,7 +51,7 @@ export default function InputPanel({ onInsert, onDelete, onReset, disabled }: In
   return (
     <div className="space-y-3 border-b border-hairline p-3">
       <div>
-        <label className="mb-1.5 block text-[10px] uppercase tracking-wide text-ink-faint">Insert</label>
+        <label className="mb-1.5 block text-[10px] uppercase tracking-wide text-ink">Insert</label>
         <div className="flex gap-1.5">
           <input
             value={insertVal}
@@ -74,7 +74,7 @@ export default function InputPanel({ onInsert, onDelete, onReset, disabled }: In
       </div>
 
       <div>
-        <label className="mb-1.5 block text-[10px] uppercase tracking-wide text-ink-faint">Delete</label>
+        <label className="mb-1.5 block text-[10px] uppercase tracking-wide text-ink">Delete</label>
         <div className="flex gap-1.5">
           <input
             value={deleteVal}

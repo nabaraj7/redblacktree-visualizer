@@ -8,6 +8,8 @@ import TreeCanvas from "@/components/Canvas/TreeCanvas";
 import ActivityLog from "@/components/Sidebar/ActivityLog";
 import PlaybackBar from "@/components/Controls/PlaybackBar";
 import InputPanel from "@/components/Panels/InputPanel";
+import HelpPanel from "@/components/Panels/HelpPanel";
+import ElementsPanel from "./Panels/ElementsPanel";
 
 export default function Home() {
   const treeRef = useRef(new RedBlackTree());
@@ -15,8 +17,6 @@ export default function Home() {
   const [currentStepIndex, setCurrentStepIndex] = useState(-1);
   const [isPlaying, setIsPlaying] = useState(false);
   const [speed, setSpeed] = useState(1);
-  // When set, playback stops at this index instead of the end of the whole
-  // history — used for "play this operation only". null = play to the end.
   const [playRangeEnd, setPlayRangeEnd] = useState<number | null>(null);
 
   const currentStep = currentStepIndex >= 0 ? steps[currentStepIndex] : null;
@@ -58,7 +58,7 @@ export default function Home() {
       const stop = setTimeout(() => setIsPlaying(false), 0);
       return () => clearTimeout(stop);
     }
-    const duration = 900 / speed;
+    const duration = 1600 / speed;
     const t = setTimeout(() => {
       setCurrentStepIndex((i) => Math.min(i + 1, effectiveEnd));
     }, duration);
@@ -162,28 +162,11 @@ export default function Home() {
       <div className="flex min-h-0 flex-1">
         <aside className="flex w-64 shrink-0 flex-col border-r border-hairline bg-panel">
           <InputPanel onInsert={handleInsertValues} onDelete={handleDeleteValues} onReset={handleReset} disabled={false} />
-          <div className="min-h-0 flex-1 overflow-hidden">
-            <p className="px-3 pt-3 pb-1 text-[10px] uppercase tracking-wide text-ink-faint">Legend</p>
-            <div className="flex flex-col gap-1.5 px-3 pb-3 text-[11px] text-ink-muted">
-              <div className="flex items-center gap-2">
-                <span className="h-2.5 w-2.5 rounded-full bg-node-red" /> Red node
-              </div>
-              <div className="flex items-center gap-2">
-                <span className="h-2.5 w-2.5 rounded-full border border-node-black-ring bg-node-black" /> Black node
-              </div>
-              <div className="flex items-center gap-2">
-                <span className="h-0.5 w-4 rounded bg-cyan" /> Rotated edge
-              </div>
-              <div className="flex items-center gap-2">
-                <span className="h-2.5 w-2.5 rounded-full ring-2 ring-amber" /> Active step
-              </div>
-            </div>
-            <p className="px-3 pt-2 pb-1 text-[10px] uppercase tracking-wide text-ink-faint">Shortcuts</p>
-            <div className="flex flex-col gap-1 px-3 pb-3 font-mono text-[11px] text-ink-muted">
-              <div>← / → — step back / forward</div>
-              <div>Shift + ← / → — prev / next operation</div>
-            </div>
-          </div>
+          <HelpPanel />
+          <ElementsPanel 
+          elements={elements}
+          onDelete={(value) => handleDeleteValues([value])}
+          />
         </aside>
 
         <main className="flex min-h-0 flex-1 flex-col">
