@@ -1,25 +1,34 @@
 @import "tailwindcss";
 
+@layer base {
+  button:focus,
+  button:focus-visible {
+    outline: none;
+    box-shadow: none;
+  }
+}
+
 @theme inline {
-  --font-sans: -apple-system, "Segoe UI", Inter, Roboto, "Helvetica Neue", Arial, sans-serif;
-  --font-mono: "JetBrains Mono", "Fira Code", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+  --font-sans: -apple-system, Inter, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", "Fira Code", monospace;
 
-  /* professional dark / graphite palette */
-  --color-canvas: #0b0e13;
-  --color-panel: #11151c;
-  --color-panel-raised: #182029;
-  --color-hairline: #262f3b;
-  --color-ink: #e7ecf3;
-  --color-ink-muted: #8891a1;
-  --color-ink-faint: #4e5866;
+  /* Crisp Slate & Dark Canvas */
+  --color-canvas: #090d16;
+  --color-panel: #111827;
+  --color-panel-raised: #1f2937;
+  --color-hairline: #374151;
+  --color-ink: #f9fafb;
+  --color-ink-muted: #9ca3af;
+  --color-ink-faint: #6b7280;
 
-  --color-node-red: #ef4444;
-  --color-node-red-ring: #fca5a5;
-  --color-node-black: #1b2432;
-  --color-node-black-ring: #5b6b82;
+  /* Red & Black Tree Nodes (Vibrant, Clear Contrast) */
+  --color-node-red: #e11d48;
+  --color-node-red-ring: #fb7185;
+  --color-node-black: #111827;
+  --color-node-black-ring: #4b5563;
 
+  /* Highlights */
   --color-amber: #f59e0b;
-  --color-cyan: #22d3ee;
 }
 
 html,
@@ -30,6 +39,7 @@ body {
 body {
   font-family: var(--font-sans);
   background: var(--color-canvas);
+  color: var(--color-ink);
 }
 
 * {
@@ -38,15 +48,12 @@ body {
 }
 
 ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 6px;
+  height: 6px;
 }
 ::-webkit-scrollbar-thumb {
   background: var(--color-hairline);
   border-radius: 999px;
-}
-::-webkit-scrollbar-track {
-  background: transparent;
 }
 
 .active-pulse {

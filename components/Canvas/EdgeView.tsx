@@ -1,5 +1,6 @@
 "use client";
 
+import { memo } from "react";
 import { motion } from "framer-motion";
 import { TreeEdge } from "@/types/tree";
 import { NODE_RADIUS } from "@/lib/layout";
@@ -22,18 +23,20 @@ function trim(from: { x: number; y: number }, to: { x: number; y: number }, radi
   };
 }
 
-export default function EdgeView({ edge }: EdgeViewProps) {
+const INACTIVE_COLOR = "var(--color-hairline, #374151)";
+const ACTIVE_COLOR = "var(--color-amber, #f59e0b)";
+
+export default memo(function EdgeView({ edge }: EdgeViewProps) {
   const { x1, y1, x2, y2 } = trim(edge.from, edge.to, NODE_RADIUS);
-  const stroke = edge.isActive ? "var(--color-cyan)" : "var(--color-hairline)";
+  const targetStroke = edge.isActive ? ACTIVE_COLOR : INACTIVE_COLOR;
 
   return (
     <motion.line
-      initial={{ x1, y1, x2, y2, opacity: 0 }}
-      animate={{ x1, y1, x2, y2, opacity: 1, stroke }}
-      transition={{ type: "spring", stiffness: 260, damping: 28 }}
-      strokeWidth={edge.isActive ? 3 : 2}
+      initial={{ x1, y1, x2, y2, opacity: 0, stroke: INACTIVE_COLOR }}
+      animate={{ x1, y1, x2, y2, opacity: 1, stroke: targetStroke }}
+      transition={{ type: "spring", stiffness: 220, damping: 24 }}
+      strokeWidth={edge.isActive ? 2.5 : 1.5}
       strokeLinecap="round"
-      style={edge.isActive ? { filter: "drop-shadow(0 0 4px var(--color-cyan))" } : undefined}
     />
   );
-}
+});
