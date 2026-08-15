@@ -28,14 +28,12 @@ export default memo(function NodeView({ node, isActive }: NodeViewProps) {
     >
       {/* Active Selection Glow Ring */}
       {isActive && (
-        <motion.circle
+        <circle
           r={NODE_RADIUS + 8}
           fill="none"
           stroke="var(--color-amber)"
           strokeWidth={2.5}
-          initial={{ opacity: 0.9, scale: 0.9 }}
-          animate={{ opacity: [0.9, 0.2, 0.9], scale: [0.9, 1.25, 0.9] }}
-          transition={{ duration: 1.4, repeat: Infinity, ease: "easeInOut" }}
+          opacity={0.6}
         />
       )}
       <circle
