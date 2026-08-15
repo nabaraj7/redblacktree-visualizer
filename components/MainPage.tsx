@@ -139,10 +139,18 @@ export default function Home() {
       if (tag === "INPUT" || tag === "TEXTAREA" || steps.length === 0) return;
       if (e.key === "ArrowRight") {
         e.preventDefault();
-        e.shiftKey ? opForward() : stepForward();
+        if (e.shiftKey) {
+          opForward();
+        } else {
+          stepForward();
+        }
       } else if (e.key === "ArrowLeft") {
         e.preventDefault();
-        e.shiftKey ? opBack() : stepBack();
+        if (e.shiftKey) {
+          opBack();
+        } else {
+          stepBack();
+        }
       }
     }
     window.addEventListener("keydown", handleKey);
