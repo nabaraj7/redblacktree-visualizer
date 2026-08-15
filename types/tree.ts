@@ -10,19 +10,19 @@ export interface RenderedNode {
   value: number;
   color: NodeColor;
   position: Point;
-  parentId?: string;
-  leftId?: string;
-  rightId?: string;
+  parentId?: string; // undefined if this node is the root
+  leftId?: string; // undefined if no left child
+  rightId?: string; // undefined if no right child
   isNil?: boolean;
 }
 
 export interface TreeEdge {
   id: string; // e.g. "edge-parent15-child10"
-  from: Point;
-  to: Point;
+  from: Point; // coordinates
+  to: Point;   // coordinates
   isActive: boolean;
-  fromId: string;
-  toId: string;
+  fromId: string; // parent id
+  toId: string;   // children id
 }
 
 export type StepType = "COMPARISON" | "RECOLOR" | "ROTATION" | "DELETION" | "BALANCED";
