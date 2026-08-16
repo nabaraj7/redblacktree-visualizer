@@ -3,7 +3,7 @@
 import { memo, useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ActivityStep } from "@/types/tree";
-import { getBounds, H_SPACING, V_SPACING } from "@/lib/layout";
+import { getBounds } from "@/lib/layout";
 import NodeView from "./NodeView";
 import EdgeView from "./EdgeView";
 
