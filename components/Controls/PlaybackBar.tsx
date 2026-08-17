@@ -99,7 +99,7 @@ export default function PlaybackBar({
         <span className="mr-0.5 text-[10px] uppercase tracking-wide text-ink-faint">
           Replay
         </span>
-        
+
         <button
           className={btn}
           onClick={onReplay}
@@ -111,7 +111,7 @@ export default function PlaybackBar({
         </button>
 
         <div className="h-5 w-px bg-hairline" />
-        
+
         <span className="mr-0.5 text-[10px] uppercase tracking-wide text-ink-faint">
           Speed
         </span>
